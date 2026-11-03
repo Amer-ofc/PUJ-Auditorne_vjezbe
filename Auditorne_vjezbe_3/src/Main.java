@@ -1,16 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
-public class Main{
-
+public class Main {
     public static void main(String[] args) {
-Employee emp1 = new Employee("Alice",101,50000);
-Manager mgr1= new Manager("Bob",102,80000,15000);
-Employee emp2 = new Employee("Charlie",103,90000);
+        Employee emp1 = new Employee("Alice", 101, 50000);
+        Manager mgr1 = new Manager("Bob", 102, 80000, 15000);
+        Employee emp2 = new Employee("Charlie", 103, 90000);
 
         System.out.println(emp1.getDetails());
         emp1.work();
@@ -23,49 +20,43 @@ Employee emp2 = new Employee("Charlie",103,90000);
 
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try(BufferedReader br = new BufferedReader(new FileReader("EmployeeData.txt"))){
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("Auditorne_vjezbe_3/EmployeeData.txt"))) {
             String line;
-            while((line=br.readLine())!=null) {
+            while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
                 String type = parts[0];
                 String name = parts[1];
                 int id = Integer.parseInt(parts[2]);
                 double salary = Double.parseDouble(parts[3]);
 
-            if(type.equals("EMPLOYEE")){
-                employees.add(new Employee(name,id,salary));
-
-            }else if(type.equals("MANAGER")){
-                double bonus = Double.parseDouble(parts[4]);
-                employees.add(new Manager(name,id,salary,bonus));
-            }
-
-            }
-
-        }catch (IOException e){
-            System.out.println("Error reading file:"+e.getMessage());
-        }
-
-                for(Employee e:employees){
-                    System.out.println(e.getDetails());
-                    e.work();
+                if (type.equals("EMPLOYEE")) {
+                    employees.add(new Employee(name, id, salary));
+                } else if (type.equals("MANAGER")) {
+                    double bonus = Double.parseDouble(parts[4]);
+                    employees.add(new Manager(name, id, salary, bonus));
+                } else if (type.equals("INTERN")) {
+                    String school = parts[4];
+                    employees.add(new Intern(name, id, salary, school));
                 }
-
-                //Zadatak 1 Dodajte novog uposlenika-Dodan je intern
-        Intern intern1= new Intern("Amer",104,30000,"IPI Akademija");
-        System.out.println(intern1.getDetails());
-                intern1.work();
-
-            //Zadatak 2 Izracunati ukupne troskove plate
-        for (Employee e : employees) {
-            System.out.println(e.getDetails());
-            e.work();
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
         }
+
+        for (Employee employee : employees) {
+            System.out.println(employee.getDetails());
+            employee.work();
+        }
+
+        Intern intern1 = new Intern("Amer", 104, 30000, "IPI Akademija");
+        System.out.println(intern1.getDetails());
+        intern1.work();
 
         double totalCosts = calculateTotalCosts(employees);
         System.out.println("Ukupni troškovi plata: $" + totalCosts);
-
     }
+
     public static double calculateTotalCosts(ArrayList<Employee> employees) {
         double totalCosts = 0;
 
@@ -80,5 +71,4 @@ Employee emp2 = new Employee("Charlie",103,90000);
 
         return totalCosts;
     }
-
 }
