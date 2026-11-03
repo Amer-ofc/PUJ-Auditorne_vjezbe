@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Main {
@@ -20,8 +23,12 @@ public class Main {
 
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(
-                new FileReader("Auditorne_vjezbe_3/EmployeeData.txt"))) {
+        Path dataFile = Paths.get("EmployeeData.txt");
+        if (!Files.exists(dataFile)) {
+            dataFile = Paths.get("Auditorne_vjezbe_3", "EmployeeData.txt");
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(dataFile.toFile()))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
