@@ -25,7 +25,15 @@ public class Main {
 
         Path dataFile = Paths.get("EmployeeData.txt");
         if (!Files.exists(dataFile)) {
+            dataFile = Paths.get("..", "EmployeeData.txt");
+        }
+        if (!Files.exists(dataFile)) {
             dataFile = Paths.get("Auditorne_vjezbe_3", "EmployeeData.txt");
+        }
+        if (!Files.exists(dataFile)) {
+            System.out.println("EmployeeData.txt nije pronađen. Radni folder: "
+                    + Paths.get("").toAbsolutePath());
+            return;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(dataFile.toFile()))) {
