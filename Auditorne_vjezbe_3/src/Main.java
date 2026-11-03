@@ -5,7 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.Collections;
+import java.util.Comparator;
 public class Main {
     public static void main(String[] args) {
         Employee emp1 = new Employee("Alice", 101, 50000);
@@ -66,13 +69,32 @@ public class Main {
             System.out.println(employee.getDetails());
             employee.work();
         }
-
+//Zadatak 1 Napraviti novog korisnika -Intern je dodan
         Intern intern1 = new Intern("Amer", 104, 30000, "IPI Akademija");
         System.out.println(intern1.getDetails());
         intern1.work();
-
+//Zadatak 2 izracunati ukupne troskove plata
         double totalCosts = calculateTotalCosts(employees);
         System.out.println("Ukupni troškovi plata: $" + totalCosts);
+        // Zadatak 3: sortiranje po plati uzlazno
+        Collections.sort(employees, Comparator.comparingDouble(Employee::getSalary));
+
+        System.out.println("\nZaposlenici sortirani po plati:");
+        for (Employee employee : employees) {
+            System.out.println(employee.getDetails());
+        }
+
+// Zadatak 4: spremanje u fajl
+        saveEmployeesToFile(employees, "EmployeeDataOutput.txt");
+
+// Zadatak 5: zaposlenik mjeseca
+        Employee employeeOfTheMonth = findEmployeeOfTheMonth(employees);
+
+        if (employeeOfTheMonth != null) {
+            System.out.println("\nZaposlenik mjeseca:");
+            System.out.println(employeeOfTheMonth.getDetails());
+            System.out.println("Ukupna plata: $" + getTotalSalary(employeeOfTheMonth));
+        }
     }
 
     public static double calculateTotalCosts(ArrayList<Employee> employees) {
@@ -88,5 +110,63 @@ public class Main {
         }
 
         return totalCosts;
+    }
+    public static void saveEmployeesToFile(
+            ArrayList<Employee> employees, String fileName) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Employee employee : employees) {
+                if (employee instanceof Manager) {
+                    Manager manager = (Manager) employee;
+
+                    writer.write("MANAGER," + manager.getName() + ","
+                            + manager.getId() + "," + manager.getSalary() + ","
+                            + (manager.getTotalSalary() - manager.getSalary()));
+
+                } else if (employee instanceof Intern) {
+                    Intern intern = (Intern) employee;
+
+                    writer.write("INTERN," + intern.getName() + ","
+                            + intern.getId() + "," + intern.getSalary() + ","
+                            + intern.getSchool());
+
+                } else {
+                    writer.write("EMPLOYEE," + employee.getName() + ","
+                            + employee.getId() + "," + employee.getSalary());
+                }
+
+                writer.newLine();
+            }
+
+            System.out.println("\nPodaci su spremljeni u fajl: " + fileName);
+
+        } catch (IOException e) {
+            System.out.println("Greška pri spremanju fajla: " + e.getMessage());
+        }
+    }
+    public static Employee findEmployeeOfTheMonth(
+            ArrayList<Employee> employees) {
+
+        if (employees.isEmpty()) {
+            return null;
+        }
+
+        Employee highestPaidEmployee = employees.get(0);
+
+        for (Employee employee : employees) {
+            if (getTotalSalary(employee) > getTotalSalary(highestPaidEmployee)) {
+                highestPaidEmployee = employee;
+            }
+        }
+
+        return highestPaidEmployee;
+    }
+    public static double getTotalSalary(Employee employee) {
+        if (employee instanceof Manager) {
+            Manager manager = (Manager) employee;
+            return manager.getTotalSalary();
+        }
+
+        return employee.getSalary();
     }
 }
