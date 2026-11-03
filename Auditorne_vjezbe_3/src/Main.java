@@ -31,6 +31,9 @@ public class Main {
             dataFile = Paths.get("Auditorne_vjezbe_3", "EmployeeData.txt");
         }
         if (!Files.exists(dataFile)) {
+            dataFile = Paths.get("Auditorne_vjezbe_3", "src", "EmployeeData.txt");
+        }
+        if (!Files.exists(dataFile)) {
             System.out.println("EmployeeData.txt nije pronađen. Radni folder: "
                     + Paths.get("").toAbsolutePath());
             return;
