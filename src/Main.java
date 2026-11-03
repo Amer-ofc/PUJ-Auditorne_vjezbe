@@ -50,7 +50,35 @@ Employee emp2 = new Employee("Charlie",103,90000);
                     System.out.println(e.getDetails());
                     e.work();
                 }
-    }
 
+                //Zadatak 1 Dodajte novog uposlenika-Dodan je intern
+        Intern intern1= new Intern("Amer",104,30000,"IPI Akademija");
+        System.out.println(intern1.getDetails());
+                intern1.work();
+
+            //Zadatak 2 Izracunati ukupne troskove plate
+        for (Employee e : employees) {
+            System.out.println(e.getDetails());
+            e.work();
+        }
+
+        double totalCosts = calculateTotalCosts(employees);
+        System.out.println("Ukupni troškovi plata: $" + totalCosts);
+
+    }
+    public static double calculateTotalCosts(ArrayList<Employee> employees) {
+        double totalCosts = 0;
+
+        for (Employee employee : employees) {
+            totalCosts += employee.getSalary();
+
+            if (employee instanceof Manager) {
+                Manager manager = (Manager) employee;
+                totalCosts += manager.getTotalSalary() - manager.getSalary();
+            }
+        }
+
+        return totalCosts;
+    }
 
 }
